@@ -34,7 +34,7 @@ RUN chown aosp:aosp /home/aosp/.gitconfig
 VOLUME ["/tmp/ccache", "/aosp"]
 
 # Improve rebuild performance by enabling compiler cache
-ENV USE_CCACHE 1
+#ENV USE_CCACHE 1
 ENV CCACHE_DIR /tmp/ccache
 
 # Work in the build directory, repo is expected to be init'd here
