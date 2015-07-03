@@ -1,6 +1,12 @@
 sdocker (){
     DOCKER_SSH_AUTH=$HOME/docker_ssh_auth
     AOSP_IMAGE=${AOSP_IMAGE:-$HOME/Project}
+
+    if [ $# -eq 0 ]; then
+        echo "Usage: $0 DOCKER_IMAGE_NAME"
+        return
+    fi
+
     if [ -n "$SSH_AUTH_SOCK" ]; then
         $(ls -l $HOME/docker_ssh_auth 2> /dev/null | grep $SSH_AUTH_SOCK > /dev/null)
         if [ $? ];
