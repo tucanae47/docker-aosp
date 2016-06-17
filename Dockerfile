@@ -1,25 +1,49 @@
 #
 # Minimum Docker image to build Android AOSP
 #
-FROM ubuntu:14.04
+FROM ubuntu:12.04.5
 
-MAINTAINER Kyle Manna <kyle@kylemanna.com>
 
-# /bin/sh points to Dash by default, reconfigure to use bash until Android
+MAINTAINER tedwang.tw@gmail.com
+
+#
+# fundamental packages
+#
+RUN apt-get update \
+	&& apt-get install -y curl vim git man-db
+# optional
+RUN apt-get install -y sudo net-tools 
+
+#
+# AOSP requirement
+#
+# host toolchains
+RUN apt-get install -y bison g++-multilib gperf libxml2-utils
+RUN apt-get install -y gnupg flex build-essential \
+	zip libc6-dev libncurses5-dev:i386 x11proto-core-dev \
+	libx11-dev:i386 libreadline6-dev:i386 libgl1-mesa-glx:i386 \
+	libgl1-mesa-dev mingw32 tofrodos \
+	python-markdown xsltproc zlib1g-dev:i386
+RUN ln -s /usr/lib/i386-linux-gnu/mesa/libGL.so.1 /usr/lib/i386-linux-gnu/libGL.so
+
+# Clean up
+RUN apt-get clean
+
+#JAVA stuff
+ENV DEBIAN_FRONTEND noninteractive
+RUN echo "debconf shared/accepted-oracle-license-v1-1 select true" | /usr/bin/debconf-set-selections
+RUN echo "debconf shared/accepted-oracle-license-v1-1 seen true" | /usr/bin/debconf-set-selections
+RUN apt-get update
+RUN apt-get install python-software-properties -y
+RUN add-apt-repository ppa:webupd8team/java
+RUN apt-get update
+RUN apt-get install oracle-java6-installer -y
+RUN apt-get install oracle-java6-set-default -y
+
+
 # build becomes POSIX compliant
 RUN echo "dash dash/sh boolean false" | debconf-set-selections && \
     dpkg-reconfigure -p critical dash
-
-# Keep the dependency list as short as reasonable
-RUN apt-get update && \
-    apt-get install -y bc bison bsdmainutils build-essential curl \
-        flex g++-multilib gcc-multilib git gnupg gperf lib32ncurses5-dev \
-        lib32readline-gplv2-dev lib32z1-dev libesd0-dev libncurses5-dev \
-        libsdl1.2-dev libwxgtk2.8-dev libxml2-utils lzop \
-        openjdk-7-jdk \
-        genisoimage \
-        pngcrush schedtool xsltproc zip zlib1g-dev libswitch-perl && \
-    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ADD https://commondatastorage.googleapis.com/git-repo-downloads/repo /usr/local/bin/
 RUN chmod 755 /usr/local/bin/*
@@ -44,3 +68,6 @@ WORKDIR /aosp
 
 #Relogin to set env var such as USER
 CMD sudo -i -u aosp
+
+
+
