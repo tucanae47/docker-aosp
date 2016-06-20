@@ -4,8 +4,10 @@
 FROM ubuntu:12.04.5
 
 
-MAINTAINER tedwang.tw@gmail.com
-
+# based on the work of MAINTAINER tedwang.tw@gmail.com + of course gennymobile
+#
+#
+MAINTAINER cmsvalenzuela@gmail.com 
 #
 # fundamental packages
 #
