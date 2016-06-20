@@ -28,6 +28,7 @@ RUN apt-get install -y gnupg flex build-essential \
 RUN apt-get install -y uuid uuid-dev
 RUN sudo apt-get install -y zlib1g-dev liblz-dev
 RUN sudo apt-get install -y liblzo2-2 liblzo2-dev
+RUN sudo apt-get install -y u-boot-tools uboot-envtools uboot-mkimage 
  
 
 RUN ln -s /usr/lib/i386-linux-gnu/mesa/libGL.so.1 /usr/lib/i386-linux-gnu/libGL.so
